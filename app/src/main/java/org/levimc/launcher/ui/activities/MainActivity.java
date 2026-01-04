@@ -35,7 +35,6 @@ import org.levimc.launcher.ui.animation.AnimationHelper;
 import org.levimc.launcher.ui.animation.DynamicAnim;
 import org.levimc.launcher.ui.dialogs.CustomAlertDialog;
 import org.levimc.launcher.ui.dialogs.GameVersionSelectDialog;
-import org.levimc.launcher.ui.dialogs.PlayStoreValidationDialog;
 import org.levimc.launcher.ui.dialogs.gameversionselect.BigGroup;
 import org.levimc.launcher.ui.dialogs.gameversionselect.VersionUtil;
 import org.levimc.launcher.ui.views.MainViewModel;
@@ -560,7 +559,6 @@ import okhttp3.OkHttpClient;
         super.onResume();
         setTextMinecraftVersion();
         updateAbiLabel();
-        updateGenuineBadge();
         refreshAccountHeaderUI();
         updateBetaBadge();
         updateDebugBadge();
@@ -584,12 +582,6 @@ import okhttp3.OkHttpClient;
             default -> R.drawable.bg_abi_default;
         };
         abiLabel.setBackgroundResource(bgRes);
-    }
-
-    private void updateGenuineBadge() {
-        if (binding == null) return;
-        boolean verified = PlayStoreValidator.isMinecraftFromPlayStore(this);
-        binding.genuineLabel.setVisibility(verified ? View.GONE : View.VISIBLE);
     }
 
     private void updateBetaBadge() {
@@ -630,11 +622,6 @@ import okhttp3.OkHttpClient;
         DynamicAnim.applyPressScale(binding.settingsButton);
         binding.deleteVersionButton.setOnClickListener(v -> showDeleteVersionDialog());
         DynamicAnim.applyPressScale(binding.deleteVersionButton);
-
-        binding.genuineLabel.setOnClickListener(v -> {
-            PlayStoreValidationDialog.showNotFromPlayStoreDialog(this);
-        });
-        DynamicAnim.applyPressScale(binding.genuineLabel);
 
         initQuickActionsRecycler();
 
@@ -727,12 +714,6 @@ import okhttp3.OkHttpClient;
                     })
                     .setNegativeButton(getString(R.string.dialog_negative_cancel), null)
                     .show();
-            return;
-        }
-
-        if (!PlayStoreValidator.isMinecraftFromPlayStore(this)) {
-            binding.launchButton.setEnabled(true);
-            PlayStoreValidationDialog.showNotFromPlayStoreDialog(this);
             return;
         }
 
@@ -911,4 +892,3 @@ import okhttp3.OkHttpClient;
     }
 
  }
-
